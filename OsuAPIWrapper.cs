@@ -5,19 +5,17 @@ using System.Net;
 public class OsuAPIWrapper
 {
   const String endpoint = "https://osu.ppy.sh/api/v2/";
-  String? access_token;
-  private static HttpClient sharedClient = new()
-  {
-    BaseAddress = new Uri(endpoint),
-  };
+  private static HttpClient sharedClient = new(){BaseAddress = new Uri(endpoint)};
+  Task<OsuAuth>? osu_auth;
+
 
   public OsuAPIWrapper(String client_secret, String client_id)
   {
     // Obtain access token
-    GetAccessToken(client_secret, client_id);
+    this.osu_auth = GetAccessToken(client_secret, client_id);
   }
 
-  public class OsuAuthenticationResp {
+  public class OsuAuth {
     public String? token_type {get; set;}
     public int? expires_in {get; set;}
     public String? access_token {get; set;}
@@ -25,7 +23,7 @@ public class OsuAPIWrapper
   };
 
 
-  private async void GetAccessToken(String client_secret, String client_id)
+  private async Task<OsuAuth>? GetAccessToken(String client_secret, String client_id)
   {
     try
     {
@@ -48,21 +46,22 @@ public class OsuAPIWrapper
         throw new HttpRequestException(await resp.Content.ReadAsStringAsync());
       }
       
+      // Deserialize json to object
       var resp_content = await resp.Content.ReadAsStringAsync();
-
-      OsuAuthenticationResp? resp_obj = JsonSerializer.Deserialize<OsuAuthenticationResp>(resp_content);
+      OsuAuth? resp_obj = JsonSerializer.Deserialize<OsuAuth>(resp_content);
       if (resp_obj == null)
       {
         throw new JsonException("Something went wrong deserializing osu authentication response");
       }
-
-
+      
+      return resp_obj;
     }
     catch (Exception e)
     {
       Console.WriteLine($"Error: {e.Message}");
     }
-    //return "access_token_placeholder";
+
+    return null;
   }
 
   public bool ValidateUser(String user_id)
