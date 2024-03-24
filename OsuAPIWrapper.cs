@@ -6,14 +6,9 @@ public class OsuAPIWrapper
 {
   const string endpoint = "https://osu.ppy.sh/api/v2/";
   private static HttpClient sharedClient = new(){BaseAddress = new Uri(endpoint)};
-  Task<OsuAuth?> osu_auth;
-
-
-  public OsuAPIWrapper(string client_secret, string client_id)
-  {
-    // Obtain access token
-    this.osu_auth = GetAccessToken(client_secret, client_id);
-  }
+  private int? token_expiration;
+  private string? access_token;
+  private string? refresh_token;
 
   public class OsuAuth {
     public string? token_type {get; set;}
@@ -22,8 +17,14 @@ public class OsuAPIWrapper
     public string? refresh_token {get; set;}
   };
 
+  public void Test()
+  {
+    Console.WriteLine(token_expiration);
+    Console.WriteLine(access_token);
+    Console.WriteLine(refresh_token);
+  }
 
-  private async Task<OsuAuth?> GetAccessToken(string client_secret, string client_id)
+  public async Task Authenticate(string client_secret, string client_id)
   {
     try
     {
@@ -54,14 +55,14 @@ public class OsuAPIWrapper
         throw new JsonException("Something went wrong deserializing osu authentication response");
       }
 
-      return resp_obj;
+      token_expiration = resp_obj.expires_in;
+      access_token = resp_obj.access_token;
+      refresh_token = resp_obj.refresh_token;
     }
     catch (Exception e)
     {
       Console.WriteLine($"Error: {e.Message}");
     }
-
-    return null;
   }
 
   public bool ValidateUser(string user_id)

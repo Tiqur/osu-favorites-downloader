@@ -1,13 +1,14 @@
 ﻿using static EnviornmentVariables;
 
 var ci = new ConsoleInterface();
-var osu = new OsuAPIWrapper(CLIENT_SECRET, CLIENT_ID);
-var USER_ID = GetUserID(); 
+var osu = new OsuAPIWrapper();
 
-Console.WriteLine($"{CLIENT_ID}");
-Console.WriteLine($"{CLIENT_SECRET}");
-Console.WriteLine($"{USER_ID}");
+// Authenticate instance
+await osu.Authenticate(CLIENT_SECRET, CLIENT_ID);
+
 ci.PrintHeader();
+
+var USER_ID = GetUserID(); 
 
 string GetUserID()
 {
