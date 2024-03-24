@@ -9,14 +9,14 @@ Console.WriteLine($"{CLIENT_SECRET}");
 Console.WriteLine($"{USER_ID}");
 ci.PrintHeader();
 
-String GetUserID()
+string GetUserID()
 {
   bool valid_client_id = false;
-  String user_id = "";
+  string user_id = "";
 
   while (!valid_client_id)
   {
-    String? resp = ci.QueryUser("Please enter a user id:");
+    string? resp = ci.QueryUser("Please enter a user id:");
     if (resp != null && !osu.ValidateUser(resp)) 
     {
       valid_client_id = true;

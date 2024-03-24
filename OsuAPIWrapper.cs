@@ -4,26 +4,26 @@ using System.Net;
 
 public class OsuAPIWrapper
 {
-  const String endpoint = "https://osu.ppy.sh/api/v2/";
+  const string endpoint = "https://osu.ppy.sh/api/v2/";
   private static HttpClient sharedClient = new(){BaseAddress = new Uri(endpoint)};
-  Task<OsuAuth>? osu_auth;
+  Task<OsuAuth?> osu_auth;
 
 
-  public OsuAPIWrapper(String client_secret, String client_id)
+  public OsuAPIWrapper(string client_secret, string client_id)
   {
     // Obtain access token
     this.osu_auth = GetAccessToken(client_secret, client_id);
   }
 
   public class OsuAuth {
-    public String? token_type {get; set;}
+    public string? token_type {get; set;}
     public int? expires_in {get; set;}
-    public String? access_token {get; set;}
-    public String? refresh_token {get; set;}
+    public string? access_token {get; set;}
+    public string? refresh_token {get; set;}
   };
 
 
-  private async Task<OsuAuth>? GetAccessToken(String client_secret, String client_id)
+  private async Task<OsuAuth?> GetAccessToken(string client_secret, string client_id)
   {
     try
     {
@@ -64,7 +64,7 @@ public class OsuAPIWrapper
     return null;
   }
 
-  public bool ValidateUser(String user_id)
+  public bool ValidateUser(string user_id)
   {
     return true;
   }

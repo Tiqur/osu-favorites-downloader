@@ -24,10 +24,10 @@ public class ConsoleInterface
 
   }
 
-  public String? QueryUser(String query)
+  public string QueryUser(string query)
   {
     Console.WriteLine(query);
-    return Console.ReadLine();
+    return Console.ReadLine() ?? throw new Exception("Something went wrong reading line");
   }
 
 }
