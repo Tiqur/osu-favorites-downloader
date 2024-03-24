@@ -1,4 +1,5 @@
-﻿public class OsuFavoritesDownloader {
+﻿public class OsuFavoritesDownloader
+{
   static ConsoleInterface ci;
   static String client_secret;
   static String user_id;
