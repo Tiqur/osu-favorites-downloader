@@ -15,10 +15,10 @@
     client_secret = GetClientSecret();
 
     // Check ENV for CLIENT_ID
-    client_secret = GetClientID();
+    client_id = GetClientID();
 
     // Create new OsuAPIWrapper
-    osu = new OsuAPIWrapper(client_secret);
+    osu = new OsuAPIWrapper(client_secret, client_id);
 
     // Get osu! user id from client
     user_id = GetUserID();
