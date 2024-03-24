@@ -53,7 +53,7 @@ public class OsuAPIWrapper
       {
         throw new JsonException("Something went wrong deserializing osu authentication response");
       }
-      
+
       return resp_obj;
     }
     catch (Exception e)
