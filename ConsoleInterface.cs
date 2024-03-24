@@ -24,4 +24,10 @@ public class ConsoleInterface {
 
   }
 
+  public String? QueryUser(String query)
+  {
+    Console.WriteLine(query);
+    return Console.ReadLine();
+  }
+
 }
