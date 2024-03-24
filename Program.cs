@@ -3,6 +3,7 @@
   static ConsoleInterface ci;
   static OsuAPIWrapper osu;
   static String client_secret;
+  static String client_id;
   static String user_id;
 
   public static void Main(String[] args)
@@ -13,6 +14,9 @@
     // Check ENV for CLIENT_SECRET
     client_secret = GetClientSecret();
 
+    // Check ENV for CLIENT_ID
+    client_secret = GetClientID();
+
     // Create new OsuAPIWrapper
     osu = new OsuAPIWrapper(client_secret);
 
@@ -20,6 +24,7 @@
     user_id = GetUserID();
 
     Console.WriteLine($"{client_secret}");
+    Console.WriteLine($"{client_id}");
     Console.WriteLine($"{user_id}");
     
     ci.PrintHeader();
@@ -31,6 +36,17 @@
     if (client_secret == null)
     {
       throw new ArgumentNullException("CLIENT_SECRET environment variable must be set.");
+    }
+
+    return client_secret;
+  }
+
+  static private String GetClientID()
+  {
+    String? client_secret = Environment.GetEnvironmentVariable("CLIENT_ID");
+    if (client_secret == null)
+    {
+      throw new ArgumentNullException("CLIENT_ID environment variable must be set.");
     }
 
     return client_secret;
