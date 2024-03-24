@@ -5,6 +5,7 @@ var osu = new OsuAPIWrapper();
 
 // Authenticate instance
 await osu.Authenticate(CLIENT_SECRET, CLIENT_ID);
+await osu.GetFavorites("14852499");
 
 ci.PrintHeader();
 

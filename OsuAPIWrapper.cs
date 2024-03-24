@@ -1,6 +1,5 @@
 using System.Text.Json;
-using System.Net;
-
+using System.Net.Http.Headers;
 
 public class OsuAPIWrapper
 {
@@ -24,6 +23,18 @@ public class OsuAPIWrapper
     Console.WriteLine(refresh_token);
   }
 
+  public async Task GetFavorites(string user_id)
+  {
+    var resp = await sharedClient.GetAsync(endpoint+$"users/{user_id}/beatmapsets/favourite?limit=100&offset={0}");
+    resp.EnsureSuccessStatusCode();
+    Console.WriteLine(await resp.Content.ReadAsStringAsync());
+  }
+
+  private void SetClientDefaultAuthHeader(string token)
+  {
+    sharedClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+  }
+
   public async Task Authenticate(string client_secret, string client_id)
   {
     try
@@ -41,11 +52,7 @@ public class OsuAPIWrapper
 
       // Send request
       var resp = await sharedClient.PostAsync("https://osu.ppy.sh/oauth/token", content);
-
-      if (resp.StatusCode != HttpStatusCode.OK)
-      {
-        throw new HttpRequestException(await resp.Content.ReadAsStringAsync());
-      }
+      resp.EnsureSuccessStatusCode();
       
       // Deserialize json to object
       var resp_content = await resp.Content.ReadAsStringAsync();
@@ -58,6 +65,7 @@ public class OsuAPIWrapper
       token_expiration = resp_obj.expires_in;
       access_token = resp_obj.access_token;
       refresh_token = resp_obj.refresh_token;
+      SetClientDefaultAuthHeader(access_token ?? "");
     }
     catch (Exception e)
     {
