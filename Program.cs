@@ -1,6 +1,7 @@
 ﻿public class OsuFavoritesDownloader
 {
   static ConsoleInterface ci;
+  static OsuAPIWrapper osu;
   static String client_secret;
   static String user_id;
 
@@ -11,6 +12,9 @@
 
     // Check ENV for CLIENT_SECRET
     client_secret = GetClientSecret();
+
+    // Create new OsuAPIWrapper
+    osu = new OsuAPIWrapper(client_secret);
 
     // Get osu! user id from client
     user_id = GetUserID();
@@ -40,19 +44,12 @@
     while (!valid_client_id)
     {
       String? resp = ci.QueryUser("Please enter a user id:");
-      if (resp != null && UserExists(resp)) 
+      if (resp != null && !osu.ValidateUser(resp)) 
       {
         valid_client_id = true;
       }
     }
 
     return user_id;
-  }
-
-  
-  static private bool UserExists(String id)
-  {
-    // To Implement
-    return true;
   }
 }
