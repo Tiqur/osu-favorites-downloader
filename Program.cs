@@ -5,10 +5,18 @@ var osu = new OsuAPIWrapper();
 
 // Authenticate instance
 await osu.Authenticate(CLIENT_SECRET, CLIENT_ID);
-HashSet<string> map_ids = await osu.FetchFavorites("14852499");
+//HashSet<string> map_ids = await osu.FetchFavorites("14852499");
+var bytes = await osu.GetBeatmapSetBytes("1859697");
 
-for (int i = 0; i < map_ids.Count; i++)
-  Console.WriteLine(map_ids.ElementAt(i));
+
+try
+{
+  File.WriteAllBytes($"output/{1859697}.osz", bytes);
+}
+catch (Exception e)
+{
+  Console.WriteLine(e);
+}
 
 
 ci.PrintHeader();

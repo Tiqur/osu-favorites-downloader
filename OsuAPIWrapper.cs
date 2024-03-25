@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
-using System.Threading;
 
 public class OsuAPIWrapper
 {
@@ -18,12 +17,17 @@ public class OsuAPIWrapper
     public string? refresh_token {get; set;}
   };
 
-  public void Test()
+  public async Task<byte[]> GetBeatmapSetBytes(string beatmapset_id)
   {
-    Console.WriteLine(token_expiration);
-    Console.WriteLine(access_token);
-    Console.WriteLine(refresh_token);
+    var resp = await sharedClient.GetAsync($"https://beatconnect.io/b/{beatmapset_id}");
+    resp.EnsureSuccessStatusCode();
+
+    return await resp.Content.ReadAsByteArrayAsync();
   }
+
+  //public async Task DownloadAllBeatmaps(HashSet<string> beatmapset_ids)
+  //{
+  //}
 
   public async Task<HashSet<string>> FetchFavorites(string user_id)
   {
@@ -34,8 +38,8 @@ public class OsuAPIWrapper
     while (true)
     {
       var resp = await sharedClient.GetAsync(endpoint+$"users/{user_id}/beatmapsets/favourite?limit=100&offset={offset}");
-      var resp_str = await resp.Content.ReadAsStringAsync();
       resp.EnsureSuccessStatusCode();
+      var resp_str = await resp.Content.ReadAsStringAsync();
 
       // Use regex to extract beatmap ids
       var rg = new Regex(@"""beatmapset_id"":\s*(\d+)");
