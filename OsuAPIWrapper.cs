@@ -25,10 +25,6 @@ public class OsuAPIWrapper
     return await resp.Content.ReadAsByteArrayAsync();
   }
 
-  //public async Task DownloadAllBeatmaps(HashSet<string> beatmapset_ids)
-  //{
-  //}
-
   public async Task<HashSet<string>> FetchFavorites(string user_id)
   {
     int offset = 0;

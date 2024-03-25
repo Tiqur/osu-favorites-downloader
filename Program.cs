@@ -5,23 +5,34 @@ var osu = new OsuAPIWrapper();
 
 // Authenticate instance
 await osu.Authenticate(CLIENT_SECRET, CLIENT_ID);
-//HashSet<string> map_ids = await osu.FetchFavorites("14852499");
-var bytes = await osu.GetBeatmapSetBytes("1859697");
 
+// Get User
+var USER_ID = "14852499";//GetUserID(); 
 
-try
+// Fetch all favorites for user
+HashSet<string> map_ids = await osu.FetchFavorites(USER_ID);
+
+foreach (string map_id in map_ids)
 {
-  File.WriteAllBytes($"output/{1859697}.osz", bytes);
+  Console.WriteLine($"Downloading: {map_id}");
+  var bytes = await osu.GetBeatmapSetBytes(map_id);
+  WriteBytesToOSZ($"output/{map_id}.osz", bytes);
 }
-catch (Exception e)
+
+
+//ci.PrintHeader();
+
+void WriteBytesToOSZ(string path, byte[] bytes)
 {
-  Console.WriteLine(e);
+  try
+  {
+    File.WriteAllBytes(path, bytes);
+  }
+  catch (Exception e)
+  {
+    Console.WriteLine(e);
+  }
 }
-
-
-ci.PrintHeader();
-
-var USER_ID = GetUserID(); 
 
 string GetUserID()
 {
