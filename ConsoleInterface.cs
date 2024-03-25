@@ -1,3 +1,19 @@
+enum Color
+{
+  BLACK = 30,
+  RED = 31,
+  GREEN = 32,
+  YELLOW = 33,
+  BLUE = 34,
+  MAGENTA = 35,
+  CYAN = 36,
+  WHITE = 37,
+  DEFAULT = 39,
+  RESET = 0
+}
+
+
+
 public class ConsoleInterface
 {
   public ConsoleInterface() 
@@ -14,8 +30,20 @@ public class ConsoleInterface
     Console.WriteLine("\x1b[2J");
   }
 
+  private void SetForegroundColor(Color color)
+  {
+    Console.WriteLine($"\x1b[0;{color}m");
+  }
+
+  private void SetBackgroundColor(Color color)
+  {
+    Console.WriteLine($"\x1b[0;{color+10}m");
+  }
+
   public void PrintHeader(string output_dir, string user_id)
   {
+    SetBackgroundColor(Color.DEFAULT);
+    SetForegroundColor(Color.DEFAULT);
     Clear();
     MoveCursorTo(0, 0);
     Console.WriteLine($"Output dir: {output_dir}");
