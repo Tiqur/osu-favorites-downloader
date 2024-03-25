@@ -50,13 +50,25 @@ public class ConsoleInterface
     Console.WriteLine("Average kbps:");
     Console.WriteLine($"Downloading favorite beatmaps for user: {user_id}");
     Console.WriteLine("");
-    Console.WriteLine("[]");
+    UpdateProgressBar(13, 18, 32);
 
   }
 
-  public void UpdateProgressBar()
+  public void UpdateProgressBar(int current, int max, int progress_bar_length)
   {
 
+    // Percent done
+    double percent = (double)current / max;
+
+    // How much of progress bar to fill
+    double progress = percent * progress_bar_length;
+
+    // Build progress bar
+    string bar = "";
+    for (int i = 0; i < progress_bar_length; i++)
+      bar += i <= progress ? '=' : '-';
+
+    Console.WriteLine($"[{bar}] {Math.Round(percent*100, 1)}%");
   }
 
   public void UpdateStatusLine()
