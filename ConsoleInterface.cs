@@ -4,8 +4,25 @@ public class ConsoleInterface
   {
   }
 
-  public void PrintHeader()
+  private void MoveCursorTo(int column, int line)
   {
+    Console.WriteLine($"\x1b[{line};{column}H ");
+  }
+
+  private void Clear()
+  {
+    Console.WriteLine("\x1b[2J");
+  }
+
+  public void PrintHeader(string output_dir, string user_id)
+  {
+    Clear();
+    MoveCursorTo(0, 0);
+    Console.WriteLine($"Output dir: {output_dir}");
+    Console.WriteLine("Average kbps:");
+    Console.WriteLine($"Downloading favorite beatmaps for user: {user_id}");
+    Console.WriteLine("");
+    Console.WriteLine("[]");
 
   }
 
