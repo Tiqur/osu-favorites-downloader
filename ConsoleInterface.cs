@@ -32,12 +32,12 @@ public class ConsoleInterface
 
   private void SetForegroundColor(Color color)
   {
-    Console.WriteLine($"\x1b[0;{color}m");
+    Console.Write($"\x1b[0;{(int)color}m");
   }
 
   private void SetBackgroundColor(Color color)
   {
-    Console.WriteLine($"\x1b[0;{color+10}m");
+    Console.Write($"\x1b[0;{(int)color+10}m");
   }
 
   public void PrintHeader(string output_dir, string user_id)
@@ -68,7 +68,20 @@ public class ConsoleInterface
     for (int i = 0; i < progress_bar_length; i++)
       bar += i <= progress ? '=' : '-';
 
-    Console.WriteLine($"[{bar}] {Math.Round(percent*100, 1)}%");
+    SetForegroundColor(Color.WHITE);
+    Console.Write($"[{bar}]");
+
+    SetForegroundColor(Color.GREEN);
+    Console.Write($" {current}/{max}");
+
+    SetForegroundColor(Color.RED);
+    Console.Write($" 19 bytes/s");
+
+    SetForegroundColor(Color.BLUE);
+    Console.Write($" eta 0:00:05");
+
+    SetForegroundColor(Color.DEFAULT);
+    Console.WriteLine();
   }
 
   public void UpdateStatusLine()
