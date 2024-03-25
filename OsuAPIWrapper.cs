@@ -1,5 +1,7 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Net.Http.Headers;
+using System.Threading;
 
 public class OsuAPIWrapper
 {
@@ -23,11 +25,42 @@ public class OsuAPIWrapper
     Console.WriteLine(refresh_token);
   }
 
-  public async Task GetFavorites(string user_id)
+  public async Task<HashSet<string>> FetchFavorites(string user_id)
   {
-    var resp = await sharedClient.GetAsync(endpoint+$"users/{user_id}/beatmapsets/favourite?limit=100&offset={0}");
-    resp.EnsureSuccessStatusCode();
-    Console.WriteLine(await resp.Content.ReadAsStringAsync());
+    int offset = 0;
+    int previous_count = 0;
+    HashSet<string> map_ids = new HashSet<string>();
+
+    while (true)
+    {
+      var resp = await sharedClient.GetAsync(endpoint+$"users/{user_id}/beatmapsets/favourite?limit=100&offset={offset}");
+      var resp_str = await resp.Content.ReadAsStringAsync();
+      resp.EnsureSuccessStatusCode();
+
+      // Use regex to extract beatmap ids
+      var rg = new Regex(@"""beatmapset_id"":\s*(\d+)");
+      var matched_ids = rg.Matches(resp_str);
+
+      // Add to hashset to remove duplicates
+      foreach (Match match in matched_ids)
+      {
+        var map_id = match.Groups[1].Value;
+        map_ids.Add(map_id);
+      }
+
+      // Break if offset is not 100 or count == prev_count (indicates out of favorited maps)
+      // count % 100 will avoid a request, but there is an edgecase if the favorited map count is a multiple of 100
+      if (map_ids.Count % 100 != 0 || map_ids.Count == previous_count)
+        break;
+
+      offset += 100;
+      previous_count = map_ids.Count;
+
+      // Be kind to api
+      Thread.Sleep(1000);
+    }
+
+    return map_ids;
   }
 
   private void SetClientDefaultAuthHeader(string token)

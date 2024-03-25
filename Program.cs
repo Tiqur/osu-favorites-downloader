@@ -5,7 +5,11 @@ var osu = new OsuAPIWrapper();
 
 // Authenticate instance
 await osu.Authenticate(CLIENT_SECRET, CLIENT_ID);
-await osu.GetFavorites("14852499");
+HashSet<string> map_ids = await osu.FetchFavorites("14852499");
+
+for (int i = 0; i < map_ids.Count; i++)
+  Console.WriteLine(map_ids.ElementAt(i));
+
 
 ci.PrintHeader();
 
