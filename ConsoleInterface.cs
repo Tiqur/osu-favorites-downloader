@@ -42,16 +42,21 @@ public class ConsoleInterface
 
   public void PrintHeader(string output_dir, string user_id)
   {
-    SetBackgroundColor(Color.DEFAULT);
-    SetForegroundColor(Color.DEFAULT);
     Clear();
     MoveCursorTo(0, 0);
-    Console.WriteLine($"Output dir: {output_dir}");
-    Console.WriteLine("Average kbps:");
-    Console.WriteLine($"Downloading favorite beatmaps for user: {user_id}");
-    Console.WriteLine("");
-    UpdateProgressBar(13, 18, 32);
+    SetBackgroundColor(Color.DEFAULT);
+    Console.Write("Output dir: ");
 
+    SetForegroundColor(Color.MAGENTA);
+    Console.WriteLine("/"+output_dir);
+
+    SetForegroundColor(Color.DEFAULT);
+    Console.Write($"Downloading favorite beatmaps for user: ");
+
+    SetForegroundColor(Color.MAGENTA);
+    Console.WriteLine(user_id);
+
+    UpdateProgressBar(13, 18, 32);
   }
 
   public void UpdateProgressBar(int current, int max, int progress_bar_length)
