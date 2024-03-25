@@ -16,6 +16,7 @@ enum Color
 
 public class ConsoleInterface
 {
+  private int spinner_state = 0;
   public ConsoleInterface() 
   {
   }
@@ -99,8 +100,14 @@ public class ConsoleInterface
 
   public void UpdateSpinner()
   {
+    char[] spinner_states = new char[]{'/', '-', '\\', '|'};
     MoveCursorTo(0, 5);
-    Console.Write('/');
+
+    Console.Write(spinner_states[spinner_state]);
+
+    spinner_state++;
+    if (spinner_state > 3)
+      spinner_state = 0;
   }
 
   public string QueryUser(string query)
