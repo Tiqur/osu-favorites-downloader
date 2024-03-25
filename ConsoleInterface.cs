@@ -17,9 +17,6 @@ enum Color
 public class ConsoleInterface
 {
   private int spinner_state = 0;
-  public ConsoleInterface() 
-  {
-  }
 
   private void MoveCursorTo(int column, int line)
   {
@@ -57,7 +54,8 @@ public class ConsoleInterface
     SetForegroundColor(Color.MAGENTA);
     Console.WriteLine(user_id);
 
-    UpdateProgressBar(13, 18, 32);
+    UpdateProgressBar(-1, 1, 32);
+    SetForegroundColor(Color.DEFAULT);
   }
 
   public void UpdateProgressBar(int current, int max, int progress_bar_length)
@@ -73,23 +71,25 @@ public class ConsoleInterface
     // Build progress bar
     string bar = "";
     for (int i = 0; i < progress_bar_length; i++)
-      bar += i <= progress ? '=' : '-';
+      bar += (i <= progress) ? '=' : '-';
 
-    SetForegroundColor(Color.WHITE);
-    Console.Write($"[{bar}]");
+    if (current > -1)
+    {
+      SetForegroundColor(Color.WHITE);
+      Console.Write($"[{bar}]");
 
-    SetForegroundColor(Color.GREEN);
-    Console.Write($" {current}/{max}");
+      SetForegroundColor(Color.GREEN);
+      Console.Write($" {current}/{max}");
 
-    SetForegroundColor(Color.RED);
-    Console.Write($" 19 bytes/s");
+      //SetForegroundColor(Color.RED);
+      //Console.Write($" 19 bytes/s");
 
-    SetForegroundColor(Color.BLUE);
-    Console.Write($" eta 0:00:05");
+      //SetForegroundColor(Color.BLUE);
+      //Console.Write($" eta 0:00:05");
 
-    SetForegroundColor(Color.DEFAULT);
-    Console.WriteLine();
-
+      SetForegroundColor(Color.DEFAULT);
+      Console.WriteLine();
+    }
   }
 
   public void UpdateStatusLine(string text)
@@ -101,13 +101,24 @@ public class ConsoleInterface
   public void UpdateSpinner()
   {
     char[] spinner_states = new char[]{'/', '-', '\\', '|'};
-    MoveCursorTo(0, 5);
+    while (true)
+    {
+      MoveCursorTo(0, 5);
 
-    Console.Write(spinner_states[spinner_state]);
+      Console.Write(spinner_states[spinner_state]);
 
-    spinner_state++;
-    if (spinner_state > 3)
-      spinner_state = 0;
+      spinner_state++;
+      if (spinner_state > 3)
+        spinner_state = 0;
+
+      Thread.Sleep(100);
+    }
+  }
+
+  public void StartSpinner()
+  {
+    Thread t = new Thread(UpdateSpinner);
+    t.Start();
   }
 
   public string QueryUser(string query)
