@@ -61,6 +61,7 @@ public class ConsoleInterface
 
   public void UpdateProgressBar(int current, int max, int progress_bar_length)
   {
+    MoveCursorTo(0, 4);
 
     // Percent done
     double percent = (double)current / max;
@@ -87,16 +88,19 @@ public class ConsoleInterface
 
     SetForegroundColor(Color.DEFAULT);
     Console.WriteLine();
+
   }
 
-  public void UpdateStatusLine()
+  public void UpdateStatusLine(string text)
   {
-
+    MoveCursorTo(1, 5);
+    Console.WriteLine($"  {text}");
   }
 
   public void UpdateSpinner()
   {
-
+    MoveCursorTo(0, 5);
+    Console.Write('/');
   }
 
   public string QueryUser(string query)

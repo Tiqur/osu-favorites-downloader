@@ -2,6 +2,13 @@
 
 var ci = new ConsoleInterface();
 ci.PrintHeader("output", "14852499");
+ci.UpdateStatusLine($"Downloaing mapset: {28310983}");
+ci.UpdateSpinner();
+Thread.Sleep(500);
+ci.UpdateProgressBar(16, 18, 32);
+Thread.Sleep(500);
+ci.UpdateProgressBar(18, 18, 32);
+
 
 
 
